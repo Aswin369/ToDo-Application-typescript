@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>My Todo List</h1>
+            <p>Stay organized and get things done</p>
+        </div>
+
+        <div class="input-section">
+            <div class="input-container">
+                <input type="text" id="taskInput" class="task-input" placeholder="What needs to be done?" maxlength="100">
+                <button id="add-btn" class="add-btn">Add Task</button>
+            </div>
+        </div>
+
+        <div class="lists-container">
+            <div class="list-section todo-list">
+                <div class="list-header">
+                    <div class="list-icon">📝</div>
+                    <h2 class="list-title">To Do</h2>
+                    <span class="task-count"><%= todo.filter(t => !t.completed).length%></span>
+                </div>
+                <div class="tasks">
+                    <%todo.filter(val => !val.completed).forEach((val)=>{%>
+                    <div class="task-item">
+                        <div>
+                            <!-- console.log() -->
+                            <input data-id="<%= val._id %>" type="checkbox" class="task-checkboxIntask">
+                        </div>
+                            <span class="task-text"><%= val.task %></span>
+                            <div class="task-actions">
+                                <button data-id="<%= val._id %>" class="action-btn delete-btn" title="Delete task">🗑</button>
+                            </div>
+                        </div>
+                        <%})%>
+                    </div>
+                </div>
+
+            <div class="list-section completed-list">
+                <div class="list-header">
+                    <div class="list-icon">✅</div>
+                    <h2 class="list-title">Completed</h2>
+                    <span class="task-count"><%= todo.filter(v => v.completed).length%></span>
+                </div>
+                <div class="tasks">
+                    <%todo.filter(val=> val.completed ).forEach((val)=>{%>
+                    <div class="task-item">
+                        <div class="task-checkbox"></div>
+                        <span class="task-text"><%=val.task%></span>
+                        <div class="task-actions">
+                            <button data-id="<%= val._id %>" class="action-btn delete-btn" title="Delete task">🗑</button>
+                        </div>
+                    </div>
+                    <%})%>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/frontend.js"></script>
+</body>
+</html>
