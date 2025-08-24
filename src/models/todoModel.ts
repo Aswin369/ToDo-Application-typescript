@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import {ToDo} from "../types/todoTypes"
 
-
 const todoSchema = new Schema<ToDo>({
     task: {
         type: String,

@@ -1,82 +1,63 @@
-import { Response, Request } from "express";
-import {TodoSerivice} from "../service/todoService"
-import {HttpStatus} from "../types/statusCode"
+import { Response, Request, NextFunction } from "express";
+import { TodoSerivice } from "../service/todoService";
+import { HttpStatus } from "../constants/statusCode";
+import { createHttpsError } from "../utils/http-error.util";
+import { successResponse } from "../utils/response.util";
+import {ResponseMessages} from "../constants/response-messages.contants"
+
 
 export class TodoController {
+  constructor(private todoSerivice: TodoSerivice) {}
 
-    constructor(private todoSerivice: TodoSerivice) {}
-
-    getTodo = async (req: Request, res: Response) => {
-        const todo = await this.todoSerivice.getTodo()
-        // console.log("this is my todo",todo)
-        res.render("index",{
-            todo
-        })
+  getTodo = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const todo = await this.todoSerivice.getTodo();
+      res.render("index", {
+        todo,
+      });
+    } catch (error) {
+        console.log("error", error);
+      next(error);
     }
+  };
 
-    addTodo = async (req:Request, res: Response) =>{
-        // console.log("fasdfdsg",req.body)
-          const {task} = req.body;
-          if(!task){
-              res.status(HttpStatus.BAD_REQUEST).json({
-                success: false,
-                message: "Task is requierd"
-              })
-        }
-        await this.todoSerivice.addTodo(task)
-        res.status(HttpStatus.CREATED).json({
-            success: true,
-            message: "Task added successfuly"
-        })
+  addTodo = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { task } = req.body;
+      if (!task) {
+        throw createHttpsError(HttpStatus.BAD_REQUEST, ResponseMessages.BAD_REQUEST)
+      }
+      await this.todoSerivice.addTodo(task);
+      successResponse(res,HttpStatus.OK,ResponseMessages.CREATED)
+    } catch (error) {
+      next(error);
     }
+  };
 
-    taskCompleted = async (req:Request, res:Response) => {
-        try{
-            console.log("Thisis body",req.body)
-        const {id, completed} = req.body
-        if(!id || completed == undefined){
-           return res.status(HttpStatus.BAD_REQUEST).json({
-                success:false,
-                message:"Task completing have issue"
-            })
-        }
-        await this.todoSerivice.taskCompleted(id,completed)
-        res.status(HttpStatus.OK).json({
-            success:true,
-            message: "Task completed"
-        })
-        }catch(err:any){
-            console.error("Something went wrond", err)
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: err.message || "Server error"
-            })
-        }
+  taskCompleted = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id, completed } = req.body;
+      if (!id || completed == undefined) {
+        throw createHttpsError(HttpStatus.BAD_REQUEST, ResponseMessages.BAD_REQUEST)
+      }
+      await this.todoSerivice.taskCompleted(id, completed);
+      successResponse(res,HttpStatus.OK, ResponseMessages.UPDATED)
+    } catch (err) {
+      next(err);
     }
+  };
 
-    deleteTask = async (req:Request, res: Response)=>{
-        console.log("THis is delete taske",req.body)
-        try {
-            const {taskId} = req.body;
-            if(!taskId){
-                res.status(HttpStatus.BAD_REQUEST).json({
-                    succuss: false,
-                    message: "Task id is null"
-                })
-            }else{
-                await this.todoSerivice.deleteTask(taskId)
-                res.status(HttpStatus.OK).json({
-                    success: true,
-                    message: "Deleted  successfully"
-                })
-            }
-        } catch (error: any) {
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                succuss: false,
-                message: error.message ||  "while Error from deleting"
-            })
-        }
+  deleteTask = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { taskId } = req.body;
+      if (!taskId) {
+        throw createHttpsError(HttpStatus.BAD_REQUEST, ResponseMessages.NOT_FOUND)
+      } else {
+        await this.todoSerivice.deleteTask(taskId);
+        successResponse(res,HttpStatus.CREATED,ResponseMessages.DELETED)
+      }
+    } catch (error) {
+      next(error);
     }
-
+  };
 }
-
