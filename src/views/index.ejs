@@ -52,7 +52,9 @@
                 <div class="tasks">
                     <%todo.filter(val=> val.completed ).forEach((val)=>{%>
                     <div class="task-item">
-                        <div class="task-checkbox"></div>
+                        <div>
+                            <input data-id="<%= val._id %>" type="checkbox" class="completedTask">
+                        </div>
                         <span class="task-text"><%=val.task%></span>
                         <div class="task-actions">
                             <button data-id="<%= val._id %>" class="action-btn delete-btn" title="Delete task">🗑</button>

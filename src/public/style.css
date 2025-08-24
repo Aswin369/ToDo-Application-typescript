@@ -287,7 +287,7 @@
             }
         }
 
-                .task-checkboxIntask {
+.task-checkboxIntask {
   width: 22px;
   height: 22px;
   appearance: none;          /* remove default checkbox */
@@ -315,3 +315,34 @@
   transform: translate(-50%, -55%); /* center the tick */
   font-weight: bold;
 }
+
+.completedTask {
+  width: 22px;
+  height: 22px;
+  appearance: none;          /* remove default checkbox */
+  -webkit-appearance: none;  /* Safari fix */
+  border: 2px solid #555;
+  border-radius: 50%;        /* makes it round */
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  background-color: white;
+  transition: all 0.2s ease-in-out;
+}
+
+.completedTask:checked {
+  background-color: #e74c3c;   /* red background when checked */
+  border-color: #e74c3c;
+}
+
+.completedTask:checked::after {
+  content: "✖";                 /* cross sign */
+  color: white;
+  font-size: 14px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%); /* center the cross */
+  font-weight: bold;
+}
+

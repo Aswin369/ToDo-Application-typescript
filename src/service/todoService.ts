@@ -31,4 +31,12 @@ export class TodoSerivice {
         throw createHttpsError(HttpStatus.NOT_FOUND, ResponseMessages.NOT_FOUND);
       }
   }
+
+  async taskNotCompleted(id:string):Promise<void> {
+    const res = await ToDoModel.updateOne({_id:id},{completed: false})
+    if(res.modifiedCount === 0){
+        throw createHttpsError(HttpStatus.NOT_FOUND,ResponseMessages.NOT_FOUND)
+    }
+  }
+
 }

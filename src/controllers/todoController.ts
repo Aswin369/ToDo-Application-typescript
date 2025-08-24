@@ -60,4 +60,16 @@ export class TodoController {
       next(error);
     }
   };
+
+  taskNotCompleted = async(req:Request, res: Response, next: NextFunction)=> {
+    try {
+        let {id} = req.body
+        if(!id) createHttpsError(HttpStatus.BAD_REQUEST, ResponseMessages.BAD_REQUEST)
+        await this.todoSerivice.taskNotCompleted(id)
+        successResponse(res,HttpStatus.OK,ResponseMessages.CREATED)
+    } catch (error) {
+        next(error)
+    }
+  }
+
 }
